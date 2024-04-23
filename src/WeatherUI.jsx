@@ -433,7 +433,7 @@ const WeatherUI = () => {
           </div>
         </div>
         <div  className="   bg-gray-700 lg:rounded-lg   ">
-        <h2 className="font-bold text-2xl py-4 pl-5"> Today Forecast climate for every 3 hours</h2>
+        <h2 className="font-bold text-2xl py-4 pl-5"> 2 days of  Forecast climate for every 3 hours</h2>
           {forecastdate.length > 0 && forecastdate.slice(0,2).map((dayData, index) => (
           <>   
              <h3 className="text-2xl pl-5  ">{formatday(dayData[0].dt_txt)}</h3>
