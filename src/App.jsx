@@ -4,7 +4,7 @@ import Frontpage from "./Frontpage";
 import Navbar from "./Navbar";
 import WeatherUI from "./WeatherUI";
 import Weatherapp from "./Weatherapp";
-import { BrowserRouter as Router ,Routes, Route } from 'react-router-dom';
+import { HashRouter as Router ,Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
