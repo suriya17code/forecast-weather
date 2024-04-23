@@ -1,16 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { allcity } from "./features/wether/weatherSlice";
-import {
-  FaCloud,
-  FaSun,
-  FaMoon,
-  FaEye,
-  FaTint,
-  FaTemperatureHigh,
-  FaWaveSquare,
-  FaMap,
-} from "react-icons/fa";
 import clear from "./assets/images/sun.png";
 import snow from "./assets/images/snow.png";
 import scatteredClouds from "./assets/images/Clouds.png";
@@ -21,6 +11,12 @@ import mist from "./assets/images/fog.png";
 import brokenclouds from "./assets/images/cloudy.png";
 import axios from "axios";
 import './index.css';
+import ForecastSlider from "./ForecastSlider";
+import Location from "./Location";
+import Fivedaysforecast from "./Fivedaysforecast";
+import Temp from "./Temp";
+import Mainpart from "./Mainpart";
+import Todayhighlights from "./Todayhighlights";
 const WeatherUI = () => {
   const { cityname } = useSelector(allcity);
   const [currentTemperature, setCurrentTemperature] = useState(null);
@@ -76,7 +72,7 @@ const WeatherUI = () => {
           `https://api.openweathermap.org/data/2.5/forecast?q=${cityname}&appid=54f80d1259009d7402c8c9ecac425d1d`
         );
         const airPollutionResponse = await axios.get(
-          "http://api.openweathermap.org/data/2.5/air_pollution?lat=51.5085&lon=-0.1257&appid=54f80d1259009d7402c8c9ecac425d1d"
+          "https://api.openweathermap.org/data/2.5/air_pollution?lat=51.5085&lon=-0.1257&appid=54f80d1259009d7402c8c9ecac425d1d"
         );
 
         // Process the data as needed
@@ -230,243 +226,19 @@ const WeatherUI = () => {
       {/* left */}
       <div className=" p-4 lg:rounded-lg xl:w-[30%] md:w-[40%] lg:w-1/2 rounded-xl md:rounded-none bg-gray-700">
         <div className="flex  items-center mb-4  ">
-          <div className=" bg-slate-800 p-11 lg:w-full rounded-2xl w-full ">
-            <h2 className="text-lg mb-1 font-bold">Now</h2>
-            <div className="flex items-center   justify-between">
-              <span className="text-4xl font-semibold">
-                {currentTemperature}°C
-              </span>
-              <img src={icon} className="w-1/2" />
-            </div>
-            <div className="text-[12px] justify-start flex  border-b-2 border-zinc-200 ">
-              <span className="mt-2 text-2xl font-bold text-yellow-500">
-                {weather}
-              </span>
-            </div>
-            <p className="mt-3">
-              {day},{date}
-            </p>
-            <p className="text-[45px] ">
-              {name},{country}
-            </p>
-          </div>
+          <Mainpart name={name} currentTemperature={currentTemperature} icon={icon} weather={weather} date={date} day={day} country={country}/>
         </div>
-        <div className="temp ">
-          <div className="bg-gray-800 rounded-lg p-4">
-            <h2 className="text-lg"> Today</h2>
-            <div className="flex justify-between"> 
-              <label>( low )</label>
-              <label>( high )</label>         
-            </div>
-           <div className="flex justify-between "> 
-           <label>{temptocelcias(mintemp) } °C</label>
-           <label>{temptocelcias(maxtemp) } °C</label>
-          
-           </div>
-            <div className="w-full tempcolor rounded-xl h-3 mt-2 "></div>
-          </div>
-        </div>
-        {/* {forecastdate.length > 0 && forecastdate.map((dayData, index) => (
-          <>   
-            
-           <div key={index} className="bg-gray-700  p-1  rounded-lg  " >
-           <div className="temp ">
-          <div className="bg-gray-800 rounded-lg p-4">
-          <h3 className="">{formatday(dayData[0].dt_txt)}</h3>
-            <div className="flex justify-between"> 
-              <label>( low )</label>
-              <label>( high )</label>         
-            </div>
-           <div className="flex justify-between "> 
-           <label>20</label>
-            <label>10</label>
-           </div>
-            <div className="w-full tempcolor rounded-xl h-3 mt-2 "></div>
-          </div>
-        </div>
-    </div>
-    </>
-))} */}
-
-        <div className="">
-          <h2 className="text-lg font-bold mb-2">5 Days Forecast</h2>
-          <div className=" flex-row justify-start ">
-            { 
-              forecastdate.map((dayData, index) => (
-                <div
-                  key={index}
-                  className="bg-slate-800 p-3 my-2  justify-evenly  flex rounded-lg lg:w-full"
-                ><div className="w-[50%]">
-                  <img src={wetherconditon[dayData[0].weather[0].icon]} className="w-[40%]"/></div>
-                  <div className="w-[50%] text-xl">  <p >{temptocelcias(dayData[0].main.temp) }<span className="text-2xl">°</span></p></div>
-                <div className="w-[50%]">  <p> {formatDate(dayData[0].dt_txt)}</p></div>
-                <div className="w-[50%]">  <p>{formatday(dayData[0].dt_txt)}</p></div>
-                </div>
-              ))}
-
-            {/* <div className="bg-slate-800 p-3 my-2  justify-evenly  flex rounded-lg lg:w-full">
-              <FaCloud className="text-5xl" />
-              <span>{7}°</span>
-              <p>3 Mar</p>
-              <p>Friday</p> forecastdate.length > 0 &&
-            </div> */}
-          </div>
-        </div>
+        <Temp maxtemp={maxtemp} mintemp={mintemp} temptocelcias={temptocelcias} />
+        <Fivedaysforecast formatDate={formatDate} forecastdate={forecastdate} wetherconditon={wetherconditon}temptocelcias={temptocelcias} formatday={formatday} />
       </div>
       {/* right */}
       <div className="right xl:w-[65%] md:w-[60%]">
-        <div className="today-highlights bg-gray-600 mt-4 rounded-xl m-1">
-          <h2 className="text-lg font-bold  px-3 pt-6 ">Todays Highlights</h2>
-
-          <div className="md:flex  justify-between lg:px-5 lg:pt-5  ">
-            <div className="p-3 mb-2 justify-between lg:w-[50%] md:w-[50%] bg-slate-800 rounded-2xl">
-              <div className="flex items-center mb-2 justify-between  bg-slate-800">
-                <span className=" text-sm">Air Quality Index</span>
-                <span className="bg-green-500 text-white px-3 py-1 rounded-2xl mr-2">
-                  Good
-                </span>
-              </div>
-              <div className="flex justify-between items-center mb-2">
-                <div className="text-center">
-                  {/* <FaTint className="text-2xl" /> */}
-                  <p className="text-center">
-                    PM<sub>2_5</sub>
-                  </p>
-                  <span className="lg:text-2xl md:text-lg font-bold">
-                    {pm2_5}
-                  </span>
-                </div>
-                <div className="text-center">
-                  {/* <FaCloud className="text-2xl" /> */}
-                  <p className="text-center">
-                    SO<sub>2</sub>
-                  </p>
-                  <span className="lg:text-2xl md:text-lg font-bold">
-                    {so2}
-                  </span>
-                </div>
-                <div className="text-center">
-                  {/* <FaEye className="text-2xl" /> */}
-                  <p className="text-center">
-                    NO<sub>2</sub>
-                  </p>
-                  <span className="lg:text-2xl md:text-lg font-bold">
-                    {no2}
-                  </span>
-                </div>
-                <div className="text-center">
-                  {/* <FaEye className="text-2xl" /> */}
-                  <p className="text-center">
-                    O<sub>3</sub>
-                  </p>
-                  <span className="lg:text-2xl md:text-lg font-bold">{o3}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className=" px-3 mb-2  justify-between  lg:w-[48%] md:w-[48%]   bg-slate-800 rounded-2xl ">
-              {sunrise !== null && sunset !== null ? (
-                <div>
-                  <div className="flex items-center mb-2 justify-between  bg-slate-800">
-                    <span className=" text-sm pt-3">sunrise & sunset</span>
-                  </div>
-                  <div className="flex justify-between mt-5">
-                    <div className="flex items-center">
-                      <FaSun className="text-[35px] mb-2 mr-2 " />
-                      <div className="pl-1">
-                        <p>sunrise</p>
-                        <span className="lg:text-[22px]  ">{sunrise}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center">
-                      <FaMoon className="text-[35px] mb-2 " />
-                      <div className="pl-1">
-                        <p>sunset</p>
-                        <span className="lg:text-[22px] ">{sunset}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                <p>Loading...</p>
-              )}
-            </div>
-          </div>
-
-          <div className="md:flex   xl:px-5 lg:pb-5 justify-between md:justify-center   items-center">
-            <div className=" items-center bg-slate-800 xl:px-5 md:w-full pl-[16px] py-5 m-2 rounded-2xl lg:w-3/6 ">
-              <div className="pb-5">
-                <span className="text-sm">Humidity</span>
-              </div>
-              <div className="flex lg:w-[120px] w-full justify-between lg:text-2xl  font-semibold">
-                <FaTint className="text-2xl mr-2" />
-                <span className="lg:text-xl">{humidity}%</span>
-              </div>
-            </div>
-            <div className=" items-center bg-slate-800 xl:px-5 md:w-full pl-[16px] py-5  m-2 rounded-2xl lg:w-3/6 ">
-              <div className="pb-5">
-                <span className="text-sm">Pressure</span>
-              </div>
-              <div className="flex  lg:w-[120px] w-full justify-between ">
-                <FaWaveSquare className="text-2xl mr-2" />
-                <span className="lg:text-xl">{pressure}hPa</span>
-              </div>
-            </div>
-            <div className=" items-center bg-slate-800 xl:px-5 md:w-full pl-[16px] py-5 m-2 rounded-2xl  lg:w-3/6">
-              <div className="pb-5">
-                <span className="text-sm">Visibility</span>
-              </div>
-              <div className="flex  lg:w-[120px] w-full justify-between ">
-                <FaEye className="text-2xl mr-2" />
-                <span className="lg:text-xl">{visibility}km</span>
-              </div>
-            </div>
-            <div className=" items-center bg-slate-800 xl:px-5 md:w-full pl-[16px] py-5 m-2 rounded-2xl  lg:w-3/6">
-              <div className="pb-5">
-                <span className="text-sm">Feels Like</span>
-              </div>
-              <div className="flex  lg:w-[120px] w-full justify-between ">
-                <FaTemperatureHigh className="text-2xl mr-2" />
-                <span className="lg:text-lg">{feelslike}°c</span>
-              </div>
-            </div>
-          </div>
-        </div>
+       <Todayhighlights pm2_5={pm2_5} so2={so2} no2={no2} o3={o3} sunrise={sunrise} sunset={sunset} humidity={humidity} pressure={pressure} visibility={visibility} feelslike={feelslike} />
         <div  className="   bg-gray-700 lg:rounded-lg   ">
         <h2 className="font-bold text-2xl py-4 pl-5"> 2 days of  Forecast climate for every 3 hours</h2>
-          {forecastdate.length > 0 && forecastdate.slice(0,2).map((dayData, index) => (
-          <>   
-             <h3 className="text-2xl pl-5  ">{formatday(dayData[0].dt_txt)}</h3>
-           <div key={index} className="bg-gray-700 p-3 my-2  justify-evenly   flex flex-wrap md:flex-nowrap  lg:flex-nowrap    rounded-lg lg:w-full" >
-            {dayData.map((item, itemIndex) => (
-              <> 
-                <div key={itemIndex} className="container bg-slate-800 md:m-1 m-2 rounded-xl   md:h-17 text-center "> 
-                <div className="lg:text-xl">  <p> {formattime(item.dt_txt)}</p></div>
-             <div className="w-full flex justify-center">   <div className="w-[70%] "> <img src={wetherconditon[item.weather[0].icon]} className=" w-full"/></div></div> 
-               <div className=" lg:text-xl">  <p >{temptocelcias(item.main.temp) }<span className="text-2xl">°</span> </p></div>
-                </div>
-                </>
-            ))}
-    
-    </div>
-    </>
-))}
+        <ForecastSlider forecastdate={forecastdate} formatday={formatday}formattime={formattime}  wetherconditon={wetherconditon}temptocelcias={temptocelcias}/>
         </div>
-        <div className="map w-full px-7 m-2 ">
-      <iframe 
-      className=" rounded-lg"
-        width="100%"
-        height="200"
-        frameBorder="0"
-        scrolling="no"
-        marginHeight="0"
-        marginWidth="0"
-        src={mapsrc}
-        title="Google Maps Embed"
-      >
-        <a href="https://www.gps.ie/">gps vehicle tracker</a>
-      </iframe>
-    </div>
+    <Location lat={lat} lon={lon}/>
       </div>
     </div>
   );
